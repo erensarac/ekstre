@@ -1,0 +1,180 @@
+/*
+ * Yazdirma / PDF ciktisi.
+ *
+ * Rapor, tarayicinin kendi yazdirma motoruyla uretilir. jsPDF + html2canvas
+ * gibi bir paket eklenmedi: o yol grafikleri piksele cevirip metni secilemez
+ * ve aranamaz kilardi, ayrica sunucusuz kalma karariyla hicbir kazanci yok.
+ * Bu yolda cikan PDF vektorel ve metin katmanli oluyor.
+ *
+ * `app/layout.tsx` icinde globals.css'ten SONRA import edilir; kurallarin
+ * ekran kurallarini ezmesi buna bagli.
+ */
+
+/* Kapak ve rapora ozel notlar yalnizca kagitta var. */
+.report-cover,
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm 12mm;
+  }
+
+  /* Zemin ve grafik renkleri baskida da kalsin; varsayilan davranis bunlari
+     atip her seyi beyaza cevirmek. */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  html,
+  body {
+    background: #fff;
+    margin: 0;
+    padding: 0;
+  }
+
+  .shell {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* --- kagida ait olmayanlar ------------------------------------------- */
+
+  /* Dugmelerin tamami etkilesim; kagitta islevi yok. Bu tek kural basliktaki
+     dugmeleri, donem suzgecini, kategori cipslerini, "CSV indir"i ve "daha
+     fazla goster"i birlikte kaldirir. */
+  button,
+  input,
+  select,
+  .chips,
+  .section-nav,
+  .faq,
+  .dropzone,
+  .tooltip,
+  .notice,
+  /* Kapakta kendi marka blogu var; sayfa basligi tekrar olurdu. */
+  .masthead {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  /* --- kapak ------------------------------------------------------------ */
+  .report-cover {
+    display: block;
+    break-after: page;
+    padding-top: 24mm;
+  }
+  .report-wordmark {
+    font-size: 30pt;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .report-wordmark span {
+    color: var(--vurgu);
+  }
+  .report-cover h1 {
+    font-size: 20pt;
+    margin: 18mm 0 2mm;
+  }
+  .report-span {
+    font-size: 12pt;
+    color: var(--gri);
+    margin: 0;
+  }
+  .report-facts {
+    display: flex;
+    gap: 14mm;
+    margin: 12mm 0;
+    padding: 5mm 0;
+    border-top: 1px solid var(--cizgi);
+    border-bottom: 1px solid var(--cizgi);
+  }
+  .report-facts dt {
+    font-size: 8.5pt;
+    color: var(--gri);
+    margin: 0 0 1mm;
+  }
+  .report-facts dd {
+    font-size: 15pt;
+    font-weight: 600;
+    margin: 0;
+  }
+  .report-verify h2 {
+    font-size: 12pt;
+    margin: 0 0 3mm;
+  }
+  .report-verify p,
+  .report-verify li {
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+  .report-verify ul {
+    margin: 3mm 0 0;
+    padding-left: 5mm;
+  }
+  .report-note {
+    margin-top: 16mm;
+    font-size: 8.5pt;
+    color: var(--gri);
+    line-height: 1.5;
+  }
+
+  /* --- sayfa gecisleri --------------------------------------------------- */
+
+  /* Kart ortasindan bolunen bir grafik okunmaz hale geliyor. */
+  .card,
+  .metric,
+  .finding {
+    break-inside: avoid;
+  }
+  /* Islem listesi bir sayfaya sigmaz; "bolunmesin" dendiginde once bos bir
+     sayfa acilip sonra zaten tasiyordu. Satirlar tek tek korunuyor (.txn). */
+  .txn-list {
+    break-inside: auto;
+  }
+  /* Baslik kendi basina sayfa sonunda kalmasin. */
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  .section {
+    margin-bottom: 8mm;
+  }
+
+  /* --- tasma ------------------------------------------------------------- */
+
+  /* Ekranda yatay kaydirilan alanlar kagitta kaydirilamaz; kesilmesinler. */
+  .chart-body,
+  .heat-scroll,
+  .table-scroll {
+    overflow: visible !important;
+  }
+
+  /* Grafikler gercek piksel genisligiyle cizilir (bkz. components/measure.ts).
+     viewBox eklendigi icin kagit genisligine orantili kuculebiliyorlar. */
+  svg {
+    max-width: 100% !important;
+    height: auto;
+  }
+
+  /* Islem listesi uzun; rapor sisirmesin diye ilk sayfalarla sinirli degil ama
+     satirlar bolunmesin. */
+  .txn {
+    break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}

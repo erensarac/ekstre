@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="ekstre.">
+  <!--
+    Kelime isaretinin noktasi.
+    · Nokta KARE — Archivo'nun noktasi kare, daire cizmek yaziyla celisiyor.
+    · Ortalanmiyor — taban-sag kosede, bir noktanin gercekte durdugu yerde.
+      Ortalanmis leke bayrak kompozisyonu uretiyordu.
+    Renkler kelime isaretiyle ayni: kagit zemin, marka moru nokta.
+  -->
+  <rect width="32" height="32" rx="7" fill="#faf9f5"/>
+  <rect x="17.5" y="18.5" width="9" height="9" rx="1" fill="#a8006b"/>
+</svg>

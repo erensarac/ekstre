@@ -1,0 +1,26 @@
+{
+  "name": "ekstre-analiz",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "predev": "node scripts/copy-worker.mjs",
+    "prebuild": "node scripts/copy-worker.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "tsc lib/parseEkstre.ts lib/analysis.ts lib/sample.ts test/run.ts --outDir .test-out --module commonjs --target es2020 --moduleResolution node --skipLibCheck && node .test-out/test/run.js"
+  },
+  "dependencies": {
+    "next": "15.1.6",
+    "pdfjs-dist": "4.6.82",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.5",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "typescript": "5.7.3"
+  }
+}
